@@ -32,11 +32,12 @@
         name: net.ipv4.conf.all.forwarding
         value: "1"
         state: present
-    - name: Disable synchronous routing
-      sysctl:
-        name: net.ipv4.conf.all.rp_filter
-        value: "0"
-        state: present
+# Для проверки ассиметричного роутинга раскомментировать блок
+#    - name: Disable synchronous routing
+#      sysctl:
+#        name: net.ipv4.conf.all.rp_filter
+#        value: "0"
+#        state: present
 
   - name: Tasks for router 1
     hosts: router1
