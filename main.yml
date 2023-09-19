@@ -1,0 +1,84 @@
+---
+  - name: General tasks
+    hosts: all
+    become: true
+    
+    pre-tasks:
+    - name: Update cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 7200
+    - name: Install packages
+      apt:
+        name:
+        - traceroute
+        - tcpdump
+        - net-tools
+        - frr
+        - frr-pythontools
+        state: present
+    - name: Stop firewall
+      systemd:
+        name: ufw
+        state: stopped
+        enabled: false
+    - name: Enable remote audit
+      lineinfile:
+        path: /etc/frr/daemons
+        regexp: '^ospfd=no'
+        line: ospfd=yes
+    - name: Enable forwarding
+      sysctl:
+        name: net.ipv4.conf.all.forwarding
+        value: "1"
+        state: present
+    - name: Disable synchronous routing
+      sysctl:
+        name: net.ipv4.conf.all.rp_filter
+        value: "0"
+        state: present
+
+  - name: Tasks for router 1
+    hosts: router1
+    become: true
+
+    tasks:
+      - name: Copy FRR-config
+        template:
+          src: frr_1.conf
+          dest: /etc/frr/frr.conf
+      - name: Start FRR
+        service:
+          name: frr
+          state: restarted
+          enabled: true
+
+  - name: Tasks for router 2
+    hosts: router2
+    become: true
+    
+    tasks:
+      - name: Copy FRR-config
+        template:
+          src: frr_2.conf
+          dest: /etc/frr/frr.conf
+      - name: Start FRR
+        service:
+          name: frr
+          state: restarted
+          enabled: true
+
+  - name: Tasks for router 3
+    hosts: router3
+    become: true
+    
+    tasks:
+      - name: Copy FRR-config
+        template:
+          src: frr_3.conf
+          dest: /etc/frr/frr.conf
+      - name: Start FRR
+        service:
+          name: frr
+          state: restarted
+          enabled: true
