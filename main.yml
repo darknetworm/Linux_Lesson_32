@@ -1,13 +1,15 @@
 ---
+#Общие для всех сетевых устройств задачи
   - name: General tasks
     hosts: all
     become: true
-    
     pre_tasks:
+#Обновление репозитория
     - name: Update cache
       apt:
         update_cache: yes
         cache_valid_time: 7200
+#Установка необходимых пакетов
     - name: Install packages
       apt:
         name:
@@ -17,21 +19,25 @@
         - frr
         - frr-pythontools
         state: present
+#Остановка встроенного firewall
     - name: Stop firewall
       systemd:
         name: ufw
         state: stopped
         enabled: false
+#Включение аудита
     - name: Enable remote audit
       lineinfile:
         path: /etc/frr/daemons
         regexp: '^ospfd=no'
         line: ospfd=yes
+#Включение форвардинга пакетов
     - name: Enable forwarding
       sysctl:
         name: net.ipv4.conf.all.forwarding
         value: "1"
         state: present
+
 # Для проверки ассиметричного роутинга раскомментировать блок
 #    - name: Disable synchronous routing
 #      sysctl:
@@ -39,45 +45,49 @@
 #        value: "0"
 #        state: present
 
+#Настройка 1 маршрутизатора
   - name: Tasks for router 1
     hosts: router1
     become: true
-
     tasks:
+#Копирование конфигурационного файла FRR
       - name: Copy FRR-config
         template:
           src: frr_1.conf
           dest: /etc/frr/frr.conf
+#Перезапуск FRR
       - name: Start FRR
         service:
           name: frr
           state: restarted
           enabled: true
-
+#Настройка 2 маршрутизатора
   - name: Tasks for router 2
     hosts: router2
     become: true
-    
     tasks:
+#Копирование конфигурационного файла FRR
       - name: Copy FRR-config
         template:
           src: frr_2.conf
           dest: /etc/frr/frr.conf
+#Перезапуск FRR
       - name: Start FRR
         service:
           name: frr
           state: restarted
           enabled: true
-
+#Настройка 3 маршрутизатора
   - name: Tasks for router 3
     hosts: router3
-    become: true
-    
+    become: true    
     tasks:
+#Копирование конфигурационного файла FRR
       - name: Copy FRR-config
         template:
           src: frr_3.conf
           dest: /etc/frr/frr.conf
+#Перезапуск FRR
       - name: Start FRR
         service:
           name: frr
