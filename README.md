@@ -17,8 +17,7 @@
 
  ### Проверка работоспособности стенда
 
-![vtysh](https://github.com/darknetworm/Linux_Lesson_32/assets/82410807/1156b357-44c1-4f7b-a55b-de2cc553f9a8)
-
+![vtysh](https://github.com/darknetworm/Linux_Lesson_32/assets/82410807/1156b357-44c1-4f7b-a55b-de2cc553f9a8)  
 Для проверки маршрутизации между сетями с использованием протокола OSPF использовались утилиты ping, traceroute, включение и отключение сетевых интерфейсов маршрутизаторов.
-![test](https://github.com/darknetworm/Linux_Lesson_32/assets/82410807/0c345c24-871c-4df7-8a45-567b0e446906)
+![test](https://github.com/darknetworm/Linux_Lesson_32/assets/82410807/0c345c24-871c-4df7-8a45-567b0e446906)  
 Для проверки ассиметричного/симметричного роутинга с использованием "стоимости" маршрута использовалась утилита tcpdump.
